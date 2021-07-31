@@ -3,14 +3,16 @@ using System;
 using AdminArea_IdentityBase.Models.Services.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AdminArea_IdentityBase.Migrations
 {
     [DbContext(typeof(AdminAreaDbContext))]
-    partial class AdminAreaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210731141027_IdentityApplicationUser")]
+    partial class IdentityApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
