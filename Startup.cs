@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AdminArea_IdentityBase.Models.Entities;
 using AdminArea_IdentityBase.Models.Services.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,9 +27,9 @@ namespace AdminArea_IdentityBase
         {
             services.AddMvc();
             services.AddRazorPages();
-            
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<AdminAreaDbContext>();
+
+            var identityBuilder = services.AddDefaultIdentity<ApplicationUser>();
+            identityBuilder.AddEntityFrameworkStores<AdminAreaDbContext>();
             
             services.AddDbContextPool<AdminAreaDbContext>(optionsBuilder => {
                 string connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("Default");
