@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using AdminArea_IdentityBase.Customizations.Identity;
 
 namespace AdminArea_IdentityBase
 {
@@ -28,7 +29,27 @@ namespace AdminArea_IdentityBase
             services.AddMvc();
             services.AddRazorPages();
 
-            var identityBuilder = services.AddDefaultIdentity<ApplicationUser>();
+            var identityBuilder = services.AddDefaultIdentity<ApplicationUser>(options => {
+
+                // Criteri di validazione della password
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredUniqueChars = 4;
+
+                // Conferma dell'account
+                options.SignIn.RequireConfirmedAccount = true;
+
+                // Blocco dell'account
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            })
+            .AddClaimsPrincipalFactory<CustomClaimsPrincipalFactory>()
+            .AddPasswordValidator<CommonPasswordValidator<ApplicationUser>>();
+            
             identityBuilder.AddEntityFrameworkStores<AdminAreaDbContext>();
             
             services.AddDbContextPool<AdminAreaDbContext>(optionsBuilder => {
