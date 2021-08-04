@@ -43,7 +43,7 @@ namespace AdminArea_IdentityBase.Areas.Identity.Pages.Account
             [EmailAddress(ErrorMessage = "Deve essere un indirizzo email valido")]
             public string Email { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "La password è obbligatoria")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
