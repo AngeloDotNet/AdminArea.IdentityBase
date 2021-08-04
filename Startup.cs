@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AdminArea_IdentityBase.Customizations.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using AdminArea_IdentityBase.Models.Options;
 
 namespace AdminArea_IdentityBase
 {
@@ -51,6 +53,11 @@ namespace AdminArea_IdentityBase
                 string connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("Default");
                 optionsBuilder.UseSqlite(connectionString);
             });
+
+            services.AddSingleton<IEmailSender, MailKitEmailSender>();
+
+            // Options
+            services.Configure<SmtpOptions>(Configuration.GetSection("Smtp"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

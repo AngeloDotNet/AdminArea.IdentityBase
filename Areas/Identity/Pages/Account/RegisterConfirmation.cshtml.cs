@@ -46,7 +46,7 @@ namespace AdminArea_IdentityBase.Areas.Identity.Pages.Account
             }
 
             Email = email;
-            // Once you add a real email sender, you should remove this code that lets you confirm the account
+
             DisplayConfirmAccountLink = env.IsDevelopment();
             if (DisplayConfirmAccountLink)
             {
