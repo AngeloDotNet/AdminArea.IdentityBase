@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using AdminArea_IdentityBase.Customizations.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using AdminArea_IdentityBase.Models.Options;
+using AdminArea_IdentityBase.Models.Enums;
 
 namespace AdminArea_IdentityBase
 {
@@ -46,21 +47,26 @@ namespace AdminArea_IdentityBase
             })
             .AddClaimsPrincipalFactory<CustomClaimsPrincipalFactory>()
             .AddPasswordValidator<CommonPasswordValidator<ApplicationUser>>();
-            
-            identityBuilder.AddEntityFrameworkStores<AdminAreaDbContext>();
-            
-            services.AddDbContextPool<AdminAreaDbContext>(optionsBuilder => {
-                string connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("Default");
-                optionsBuilder.UseSqlite(connectionString);
-            });
 
+            var persistence = Persistence.EfCore;
+            switch (persistence)
+            {
+                case Persistence.EfCore:
+                    identityBuilder.AddEntityFrameworkStores<AdminAreaDbContext>();
+
+                    services.AddDbContextPool<AdminAreaDbContext>(optionsBuilder => {
+                    string connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("Default");
+                    optionsBuilder.UseSqlite(connectionString);
+                });
+            break;
+            }
+            
             services.AddSingleton<IEmailSender, MailKitEmailSender>();
 
             // Options
             services.Configure<SmtpOptions>(Configuration.GetSection("Smtp"));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsEnvironment("Development"))
@@ -79,15 +85,12 @@ namespace AdminArea_IdentityBase
             }
 
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseResponseCaching();
-
-            //EndpointMiddleware
             app.UseEndpoints(routeBuilder => {
                 routeBuilder.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 routeBuilder.MapRazorPages();
