@@ -6,6 +6,9 @@
         <a class="nav-link" asp-page="/Account/Manage/Index" asp-area="Identity">Sei collegato come @User.FindFirst("FullName").Value</a>
     </li>
     <li class="nav-item active">
+        <a class="nav-link" asp-page="/Contact">Supporto</a>
+    </li>
+    <li class="nav-item active">
         <form class="form-inline" method="post" asp-page="/Account/Logout" asp-area="Identity">
             <button type="submit" class="btn btn-link text-white">Esci</button>
         </form>

@@ -1,0 +1,17 @@
+@page
+@model AdminArea_IdentityBase.Pages.ContactModel
+<h1>Fai una domanda al supporto</h1>
+<div class="row">
+    <div class="col-12">
+        <form method="POST">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <label asp-for="Question"></label>
+            <textarea asp-for="Question" class="form-control" rows="5"></textarea>
+            <button type="submit" class="btn btn-primary mt-3">Invia la domanda</button>
+        </form>
+    </div>
+</div>
+@section Scripts
+{
+<partial name="_Validation"></partial>
+}

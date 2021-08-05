@@ -9,10 +9,11 @@ using MimeKit;
 
 namespace AdminArea_IdentityBase.Models.Services.Infrastructure
 {
-    public class MailKitEmailSender : IEmailSender
+    public class MailKitEmailSender : IEmailClient
     {
         private readonly IOptionsMonitor<SmtpOptions> smtpOptionsMonitor;
         private readonly ILogger<MailKitEmailSender> logger;
+        
         public MailKitEmailSender(IOptionsMonitor<SmtpOptions> smtpOptionsMonitor, ILogger<MailKitEmailSender> logger)
         {
             this.logger = logger;

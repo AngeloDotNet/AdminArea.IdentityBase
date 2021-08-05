@@ -72,6 +72,7 @@ namespace AdminArea_IdentityBase
 
             // Options
             services.Configure<SmtpOptions>(Configuration.GetSection("Smtp"));
+            services.Configure<UsersOptions>(Configuration.GetSection("Users"));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
