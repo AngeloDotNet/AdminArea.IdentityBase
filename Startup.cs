@@ -11,6 +11,7 @@ using AdminArea_IdentityBase.Customizations.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using AdminArea_IdentityBase.Models.Options;
 using AdminArea_IdentityBase.Models.Enums;
+using AdminArea_IdentityBase.Models.Services.Application;
 
 namespace AdminArea_IdentityBase
 {
@@ -25,7 +26,10 @@ namespace AdminArea_IdentityBase
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddRazorPages();
+            
+            services.AddRazorPages(options => {
+                options.Conventions.AllowAnonymousToPage("/Privacy");
+            });
 
             var identityBuilder = services.AddDefaultIdentity<ApplicationUser>(options => {
 
@@ -54,6 +58,8 @@ namespace AdminArea_IdentityBase
                 case Persistence.EfCore:
                     identityBuilder.AddEntityFrameworkStores<AdminAreaDbContext>();
 
+                    services.AddTransient<IAdminService, EfCoreAdminService>();
+
                     services.AddDbContextPool<AdminAreaDbContext>(optionsBuilder => {
                     string connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("Default");
                     optionsBuilder.UseSqlite(connectionString);
@@ -62,6 +68,7 @@ namespace AdminArea_IdentityBase
             }
             
             services.AddSingleton<IEmailSender, MailKitEmailSender>();
+            services.AddSingleton<IEmailClient, MailKitEmailSender>();
 
             // Options
             services.Configure<SmtpOptions>(Configuration.GetSection("Smtp"));
@@ -92,8 +99,8 @@ namespace AdminArea_IdentityBase
 
             app.UseResponseCaching();
             app.UseEndpoints(routeBuilder => {
-                routeBuilder.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-                routeBuilder.MapRazorPages();
+                routeBuilder.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}").RequireAuthorization();
+                routeBuilder.MapRazorPages().RequireAuthorization();
             });
         }
     }
