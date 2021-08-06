@@ -13,6 +13,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using AdminArea_IdentityBase.Models.Entities;
+using System.Security.Claims;
+using System;
+using Microsoft.Extensions.Options;
+using AdminArea_IdentityBase.Models.Options;
+
 namespace AdminArea_IdentityBase.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
@@ -22,21 +27,20 @@ namespace AdminArea_IdentityBase.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        //private readonly IOptionsMonitor<UsersOptions> _usersOptions;
+        private readonly IOptionsMonitor<UsersOptions> _usersOptions;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
-            //IEmailSender emailSender,
-            //IOptionsMonitor<UsersOptions> usersOptions)
+            IEmailSender emailSender,
+            IOptionsMonitor<UsersOptions> usersOptions)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            //_usersOptions = usersOptions;
+            _usersOptions = usersOptions;
         }
 
         [BindProperty]
@@ -88,15 +92,15 @@ namespace AdminArea_IdentityBase.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    //if (user.Email.Equals(_usersOptions.CurrentValue.AssignAdministratorRoleOnRegistration, StringComparison.OrdinalIgnoreCase))
-                    //{
-                    //    Claim claim = new (ClaimTypes.Role, "Administrator");
-                    //    IdentityResult roleAssignmentResult = await _userManager.AddClaimAsync(user, claim);
-                    //    if (!roleAssignmentResult.Succeeded)
-                    //    {
-                    //        _logger.LogWarning("Could not assign the administrator role to the user");
-                    //    }
-                    //}
+                    if (user.Email.Equals(_usersOptions.CurrentValue.AssignAdministratorRoleOnRegistration, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Claim claim = new (ClaimTypes.Role, "Administrator");
+                        IdentityResult roleAssignmentResult = await _userManager.AddClaimAsync(user, claim);
+                        if (!roleAssignmentResult.Succeeded)
+                        {
+                            _logger.LogWarning("Could not assign the administrator role to the user");
+                        }
+                    }
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
