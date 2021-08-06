@@ -1,0 +1,54 @@
+@page
+@model AdminArea_IdentityBase.Pages.Admin.UsersModel
+
+<h1>@ViewData["Title"]</h1>
+<form method="post">
+    <div class="row">
+        <div class="col-4">
+            <label asp-for="Input.Email"></label>
+            <input type="text" asp-for="Input.Email" class="form-control" placeholder="Email">
+        </div>
+        <div class="col-4">
+            <label asp-for="Input.Role"></label>
+            <select asp-for="Input.Role" asp-items="@Html.GetEnumSelectList<Role>()" class="form-control">
+            </select>
+        </div>
+        <div class="col-4">
+            <label>Operazione</label>
+            <div>
+                <button type="submit" class="btn btn-success" asp-route-inrole="@((int) Model.InRole)" asp-page-handler="Assign">Assegna</button>
+                <button type="submit" class="btn btn-danger" asp-route-inrole="@((int) Model.InRole)" asp-page-handler="Revoke">Revoca</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mt-3" asp-validation-summary="All"></div>
+    </div>
+</form>
+
+<ul class="nav nav-tabs mb-3">
+  @foreach(SelectListItem item in Html.GetEnumSelectList<Role>())
+  {
+  string activeClass = item.Value == ((int) Model.InRole).ToString() ? "active" : string.Empty;
+  <li class="nav-item">
+    <a class="nav-link @activeClass" asp-route-inrole="@item.Value">@item.Text</a>
+  </li>
+  }
+</ul>
+@foreach (ApplicationUser user in Model.Users)
+{
+    <div class="row">
+        <div class="col-6">@user.FullName</div>
+        <div class="col-6">@user.Email</div>
+    </div>
+    <hr>
+}
+@if (Model.Users.Count == 0)
+{
+    <p class="text-center text-muted">Questo ruolo non è ancora stato assegnato ad alcun utente</p>
+}
+
+@section Scripts
+{
+    <partial name="_Validation" />
+}
