@@ -1,3 +1,10 @@
+@inject IAuthorizationService authService
+@inject SignInManager<ApplicationUser> signInManager
+@{
+  AuthorizationPolicy policy = new AuthorizationPolicyBuilder().RequireRole(nameof(Role.Administrator)).Build();
+  AuthorizationResult authorizationResult = await authService.AuthorizeAsync(User, policy);
+  bool isAdmin = authorizationResult.Succeeded;
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,11 +33,20 @@
     <div id="wrapper">
         <ul class="sidebar navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" asp-action="Index" asp-controller="Home"><i class="fas fa-fw fa-tachometer-alt"></i><span>Dashboard</span></a>
+                <a class="nav-link" asp-action="Index" asp-controller="Home"><i class="fas fa-fw fa-tachometer-alt"></i> <span>Dashboard</span></a>
             </li>
-            <!--<li class="nav-item">
-                <a class="nav-link" href="charts.html"><i class="fas fa-fw fa-chart-area"></i><span>VOCE 1</span></a>
-            </li>-->
+            @if (isAdmin)
+            {
+                <li class="nav-item active">
+                    <a class="nav-link" asp-page="/Admin/Users"><i class="fas fa-fw fa-users"></i> <span>Gestione Utenti</span></a>
+                </li>
+            }
+            else if (signInManager.IsSignedIn(User))
+            {
+                <li class="nav-item active">
+                    <a class="nav-link" asp-page="/Contact"><i class="fas fa-fw fa-life-ring"></i> <span>Supporto</span></a>
+                </li>
+            }
         </ul>
 
         <div id="content-wrapper">
