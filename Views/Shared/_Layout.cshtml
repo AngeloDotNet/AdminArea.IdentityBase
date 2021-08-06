@@ -1,9 +1,9 @@
 @inject IAuthorizationService authService
 @inject SignInManager<ApplicationUser> signInManager
 @{
-  AuthorizationPolicy policy = new AuthorizationPolicyBuilder().RequireRole(nameof(Role.Administrator)).Build();
-  AuthorizationResult authorizationResult = await authService.AuthorizeAsync(User, policy);
-  bool isAdmin = authorizationResult.Succeeded;
+    AuthorizationPolicy policy = new AuthorizationPolicyBuilder().RequireRole(nameof(Role.Administrator)).Build();
+    AuthorizationResult authorizationResult = await authService.AuthorizeAsync(User, policy);
+    bool isAdmin = authorizationResult.Succeeded;
 }
 <!DOCTYPE html>
 <html lang="en">
