@@ -2,7 +2,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AdminArea_IdentityBase.Models.Exceptions;
 using AdminArea_IdentityBase.Models.Services.Infrastructure;
-using Ganss.XSS;
+using Ganss.Xss;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -31,7 +31,11 @@ namespace AdminArea_IdentityBase.Models.Services.Application
             userFullName = httpContextAccessor.HttpContext.User.FindFirst("FullName").Value;
             userEmail = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Email).Value;
 
-            question = new HtmlSanitizer(allowedTags: new string[0]).Sanitize(question);
+            //question = new HtmlSanitizer(allowedTags: new string[0]).Sanitize(question);
+            var sanitizer = new HtmlSanitizer();
+            var html = sanitizer.AllowedTags;
+
+            question = sanitizer.Sanitize(question);
 
             string subject = $@"Domanda di supporto dal portale Admin Area";
             string message = $@"<p>L'utente {userFullName} (<a href=""{userEmail}"">{userEmail}</a>) ti ha inviato la seguente domanda:</p>
