@@ -1,37 +1,39 @@
-using System;
+using AdminArea_IdentityBase.Customizations.Identity;
 using AdminArea_IdentityBase.Models.Entities;
+using AdminArea_IdentityBase.Models.Enums;
+using AdminArea_IdentityBase.Models.Options;
+using AdminArea_IdentityBase.Models.Services.Application;
 using AdminArea_IdentityBase.Models.Services.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AdminArea_IdentityBase.Customizations.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using AdminArea_IdentityBase.Models.Options;
-using AdminArea_IdentityBase.Models.Enums;
-using AdminArea_IdentityBase.Models.Services.Application;
+using System;
 
 namespace AdminArea_IdentityBase
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration) 
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
         public IConfiguration Configuration { get; }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            
-            services.AddRazorPages(options => {
+
+            services.AddRazorPages(options =>
+            {
                 options.Conventions.AllowAnonymousToPage("/Privacy");
             });
 
-            var identityBuilder = services.AddDefaultIdentity<ApplicationUser>(options => {
+            var identityBuilder = services.AddDefaultIdentity<ApplicationUser>(options =>
+            {
 
                 // Criteri di validazione della password
                 options.Password.RequireDigit = true;
@@ -60,13 +62,14 @@ namespace AdminArea_IdentityBase
 
                     services.AddTransient<IAdminService, EfCoreAdminService>();
 
-                    services.AddDbContextPool<AdminAreaDbContext>(optionsBuilder => {
-                    string connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("Default");
-                    optionsBuilder.UseSqlite(connectionString);
-                });
-            break;
+                    services.AddDbContextPool<AdminAreaDbContext>(optionsBuilder =>
+                    {
+                        string connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("Default");
+                        optionsBuilder.UseSqlite(connectionString);
+                    });
+                    break;
             }
-            
+
             services.AddSingleton<IEmailSender, MailKitEmailSender>();
             services.AddSingleton<IEmailClient, MailKitEmailSender>();
 
@@ -83,8 +86,6 @@ namespace AdminArea_IdentityBase
             }
             else
             {
-                // app.UseExceptionHandler("/Error");
-                // Breaking change .NET 5: https://docs.microsoft.com/en-us/dotnet/core/compatibility/aspnet-core/5.0/middleware-exception-handler-throws-original-exception
                 app.UseExceptionHandler(new ExceptionHandlerOptions
                 {
                     ExceptionHandlingPath = "/Error",
@@ -99,7 +100,8 @@ namespace AdminArea_IdentityBase
             app.UseAuthorization();
 
             app.UseResponseCaching();
-            app.UseEndpoints(routeBuilder => {
+            app.UseEndpoints(routeBuilder =>
+            {
                 routeBuilder.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}").RequireAuthorization();
                 routeBuilder.MapRazorPages().RequireAuthorization();
             });
