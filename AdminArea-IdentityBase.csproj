@@ -11,17 +11,17 @@
 
   <ItemGroup>
     <PackageReference Include="HtmlSanitizer" Version="8.0.723" />
-    <PackageReference Include="MailKit" Version="3.4.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.13" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.13" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.13" Condition="'$(Configuration)' == 'Debug'" />
-    <PackageReference Include="Microsoft.Data.SQLite" Version="6.0.13" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.13">
+    <PackageReference Include="MailKit" Version="4.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.23" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.23" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.23" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageReference Include="Microsoft.Data.SQLite" Version="7.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.12">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.13" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.12" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
   </ItemGroup>
 
 </Project>
